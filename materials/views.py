@@ -19,7 +19,6 @@ class CourseViewSet(ModelViewSet):
 
 # Контроллер для модели лессон, сделан через джинерик
 class LessonCreateAPIView(CreateAPIView):
-    queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
 
 
