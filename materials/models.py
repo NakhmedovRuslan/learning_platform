@@ -2,7 +2,6 @@ from django.db import models
 
 
 class Course(models.Model):
-    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100, verbose_name="Название")
     description = models.CharField(max_length=300, verbose_name="Описание")
     preview = models.ImageField(
@@ -19,7 +18,6 @@ class Course(models.Model):
 
 
 class Lesson(models.Model):
-    id = models.AutoField(primary_key=True)
     course = models.ForeignKey(
         Course, on_delete=models.CASCADE, related_name="lessons", verbose_name="Курс"
     )
