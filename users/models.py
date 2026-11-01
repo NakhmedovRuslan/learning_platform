@@ -1,8 +1,7 @@
 from django.contrib.auth.models import AbstractUser, BaseUserManager
-from django.db import models
 from django.core.exceptions import ValidationError
+from django.db import models
 
-from materials.models import Course, Lesson
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -16,6 +15,7 @@ class CustomUserManager(BaseUserManager):
         extra_fields.setdefault("is_superuser", True)
 
         return self.create_user(email, password, **extra_fields)
+
 
 class CustomUser(AbstractUser):
     objects = CustomUserManager()
@@ -41,11 +41,14 @@ class Payments(models.Model):
         CASH = "cash", "Наличными"
         CARD = "card", "Картой"
 
-
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     payment_date = models.DateField(auto_now_add=True)
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True, blank=True)
-    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, null=True, blank=True)
+    course = models.ForeignKey(
+        "materials.Course", on_delete=models.CASCADE, null=True, blank=True
+    )
+    lesson = models.ForeignKey(
+        "materials.Lesson", on_delete=models.CASCADE, null=True, blank=True
+    )
     payment_amount = models.DecimalField(max_digits=10, decimal_places=2)
     payment_method = models.CharField(choices=PaymentMethod.choices, max_length=20)
 
@@ -53,10 +56,7 @@ class Payments(models.Model):
         super().clean()
 
         if bool(self.course) == bool(self.lesson):
-            raise ValidationError(
-                "Необходимо указать либо курс, либо отдельный урок."
-            )
+            raise ValidationError("Необходимо указать либо курс, либо отдельный урок.")
 
     def __str__(self):
         return f"Пользователь {self.user.email} сделал платёж №{self.pk} на сумму {self.payment_amount}. \nОплатил {self.course or self.lesson} {self.payment_method}."
-
