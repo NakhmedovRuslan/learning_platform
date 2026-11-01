@@ -6,8 +6,6 @@ from rest_framework.viewsets import ModelViewSet
 
 from materials.models import Course, Lesson
 from materials.serializers import CourseSerializer, LessonSerializer
-
-
 from users.permissions import IsModerator, IsOwner
 
 
@@ -32,7 +30,6 @@ class CourseViewSet(ModelViewSet):
         return super().get_permissions()
 
 
-
 # Контроллеры для модели лессон, сделаны через джинерик
 class LessonCreateAPIView(CreateAPIView):
     serializer_class = LessonSerializer
@@ -54,6 +51,7 @@ class LessonUpdateAPIView(UpdateAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
     permission_classes = [IsAuthenticated, IsModerator | IsOwner]
+
 
 class LessonDestroyAPIView(DestroyAPIView):
     queryset = Lesson.objects.all()
