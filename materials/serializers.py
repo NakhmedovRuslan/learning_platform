@@ -1,11 +1,8 @@
 from rest_framework import serializers
 from rest_framework.fields import SerializerMethodField
 
-from materials.validators import validate_video_link
-
-
-
 from materials.models import Course, Lesson, Subscription
+from materials.validators import validate_video_link
 
 
 class LessonSerializer(serializers.ModelSerializer):

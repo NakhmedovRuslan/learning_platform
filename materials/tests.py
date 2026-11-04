@@ -1,26 +1,32 @@
+from django.contrib.auth.models import Group
 from django.urls import reverse
 from rest_framework import status
-from django.contrib.auth.models import Group
-
 from rest_framework.test import APITestCase
 
-from materials.models import Lesson, Course, Subscription
-
+from materials.models import Course, Lesson, Subscription
 from users.models import CustomUser
 
 
 class LessonTestCase(APITestCase):
 
     def setUp(self):
-        self.user = CustomUser.objects.create_user(email='test@mail.com', password='123qweQWE')
-        self.course = Course.objects.create(name="Test course", description="test course description", owner=self.user)
-        self.lesson = Lesson.objects.create(name="Test lesson", description="Test lesson description",
-                                            video_link="https://www.youtube.com/", course=self.course)
+        self.user = CustomUser.objects.create_user(
+            email="test@mail.com", password="123qweQWE"
+        )
+        self.course = Course.objects.create(
+            name="Test course", description="test course description", owner=self.user
+        )
+        self.lesson = Lesson.objects.create(
+            name="Test lesson",
+            description="Test lesson description",
+            video_link="https://www.youtube.com/",
+            course=self.course,
+        )
         self.client.force_authenticate(user=self.user)
 
         self.moderator = CustomUser.objects.create_user(
-            email="moder@mail.com",
-            password="123qweQWE")
+            email="moder@mail.com", password="123qweQWE"
+        )
         group, _ = Group.objects.get_or_create(name="Модератор")
         self.moderator.groups.add(group)
 
@@ -88,11 +94,14 @@ class LessonTestCase(APITestCase):
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(
-            Subscription.objects.filter(user=self.user, course=self.course).exists())
+            Subscription.objects.filter(user=self.user, course=self.course).exists()
+        )
 
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertFalse(Subscription.objects.filter(user=self.user, course=self.course).exists())
+        self.assertFalse(
+            Subscription.objects.filter(user=self.user, course=self.course).exists()
+        )
 
     def test_lesson_permissions(self):
         """тесты на права модера"""
@@ -114,7 +123,7 @@ class LessonTestCase(APITestCase):
             "name": "Test lesson",
             "description": "Test description",
             "course": self.course.pk,
-            "video_link": "https://www.youtube.com/"
+            "video_link": "https://www.youtube.com/",
         }
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
