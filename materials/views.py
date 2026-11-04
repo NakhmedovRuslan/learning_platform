@@ -5,6 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
 from materials.models import Course, Lesson
+from materials.paginations import CustomPagination
 from materials.serializers import CourseSerializer, LessonSerializer
 from users.permissions import IsModerator, IsOwner
 
@@ -13,6 +14,7 @@ from users.permissions import IsModerator, IsOwner
 class CourseViewSet(ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
+    pagination_class = CustomPagination
 
     def perform_create(self, serializer):
         course = serializer.save()
@@ -31,28 +33,29 @@ class CourseViewSet(ModelViewSet):
 
 
 # Контроллеры для модели лессон, сделаны через джинерик
-class LessonCreateAPIView(CreateAPIView):
+class LessonsCreateAPIView(CreateAPIView):
     serializer_class = LessonSerializer
     permission_classes = [~IsModerator, IsAuthenticated]
 
 
-class LessonListAPIView(ListAPIView):
+class LessonsListAPIView(ListAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
+    pagination_class = CustomPagination
 
 
-class LessonRetrieveAPIView(RetrieveAPIView):
-    queryset = Lesson.objects.all()
-    serializer_class = LessonSerializer
-    permission_classes = [IsAuthenticated, IsModerator | IsOwner]
-
-
-class LessonUpdateAPIView(UpdateAPIView):
+class LessonsRetrieveAPIView(RetrieveAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
     permission_classes = [IsAuthenticated, IsModerator | IsOwner]
 
 
-class LessonDestroyAPIView(DestroyAPIView):
+class LessonsUpdateAPIView(UpdateAPIView):
+    queryset = Lesson.objects.all()
+    serializer_class = LessonSerializer
+    permission_classes = [IsAuthenticated, IsModerator | IsOwner]
+
+
+class LessonsDestroyAPIView(DestroyAPIView):
     queryset = Lesson.objects.all()
     permission_classes = [IsAuthenticated, ~IsModerator | IsOwner]
