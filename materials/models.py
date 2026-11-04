@@ -1,11 +1,16 @@
 from django.db import models
 
+from users.models import CustomUser
+
 
 class Course(models.Model):
     name = models.CharField(max_length=100, verbose_name="Название")
     description = models.CharField(max_length=300, verbose_name="Описание")
     preview = models.ImageField(
         upload_to="course_previews/", verbose_name="Превью", blank=True, null=True
+    )
+    owner = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE, verbose_name="Создатель курса"
     )
 
     def __str__(self):
