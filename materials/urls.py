@@ -3,7 +3,7 @@ from rest_framework.routers import SimpleRouter
 
 from materials.views import (CourseViewSet, LessonsCreateAPIView,
                              LessonsDestroyAPIView, LessonsListAPIView,
-                             LessonsRetrieveAPIView, LessonsUpdateAPIView)
+                             LessonsRetrieveAPIView, LessonsUpdateAPIView, SubscriptionAPIView)
 
 app_name = "materials"
 
@@ -22,6 +22,7 @@ urlpatterns = [
         LessonsDestroyAPIView.as_view(),
         name="lessons_destroy",
     ),
+    path("subscriptions/", SubscriptionAPIView.as_view(), name="subscriptions_list"),
 ]
 
 urlpatterns += router.urls
