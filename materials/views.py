@@ -13,8 +13,8 @@ from materials.serializers import CourseSerializer, LessonSerializer
 from users.permissions import IsModerator, IsOwner
 
 
-# Контроллер для модели курс, сделан через вьювсет
 class CourseViewSet(ModelViewSet):
+    """Контроллер для модели курс, сделан через вьювсет"""
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
     pagination_class = CustomPagination
@@ -35,36 +35,42 @@ class CourseViewSet(ModelViewSet):
         return super().get_permissions()
 
 
-# Контроллеры для модели лессон, сделаны через джинерик
+
 class LessonsCreateAPIView(CreateAPIView):
+    """Контроллеры для модели лессон, сделаны через джинерик"""
     serializer_class = LessonSerializer
     permission_classes = [~IsModerator, IsAuthenticated]
 
 
 class LessonsListAPIView(ListAPIView):
+    """контроллер получения списка уроков"""
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
     pagination_class = CustomPagination
 
 
 class LessonsRetrieveAPIView(RetrieveAPIView):
+    """контролер детализации конкретного урока"""
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
     permission_classes = [IsAuthenticated, IsModerator | IsOwner]
 
 
 class LessonsUpdateAPIView(UpdateAPIView):
+    """контроллер обновления урока"""
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
     permission_classes = [IsAuthenticated, IsModerator | IsOwner]
 
 
 class LessonsDestroyAPIView(DestroyAPIView):
+    """контроллер удаления урока"""
     queryset = Lesson.objects.all()
     permission_classes = [IsAuthenticated, ~IsModerator | IsOwner]
 
 
 class SubscriptionAPIView(APIView):
+    """контроллен подписок/отписок на обновления курса"""
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
