@@ -13,16 +13,16 @@ def create_stripe_product(name):
 def create_stripe_price(amount, product):
     """Создание цены в страйп"""
     price = client.v1.prices.create({
-        "product": product.get("id"),
+        "product": product.id,
         "currency": "rub",
-        "unit_amount": amount * 100,
+        "unit_amount": int(amount * 100),
     })
     return price
 
 def create_stripe_session(price):
     session = client.v1.checkout.sessions.create({
         "success_url": "http://127.0.0.1:8000/",
-        "line_items": [{"price": price.get("id"), "quantity": 1}],
+        "line_items": [{"price": price.id, "quantity": 1}],
         "mode": "payment",
     })
-    return session.get("id"), session.get("url")
+    return session.id, session.url

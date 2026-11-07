@@ -45,16 +45,36 @@ class Payments(models.Model):
 
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     payment_date = models.DateField(auto_now_add=True)
+
     course = models.ForeignKey(
-        "materials.Course", on_delete=models.CASCADE, null=True, blank=True
-    )
+        "materials.Course",
+        on_delete=models.CASCADE)
+
     lesson = models.ForeignKey(
-        "materials.Lesson", on_delete=models.CASCADE, null=True, blank=True
+        "materials.Lesson",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
     )
+
     payment_amount = models.DecimalField(max_digits=10, decimal_places=2)
-    payment_method = models.CharField(choices=PaymentMethod.choices, max_length=20)
-    session_id = models.CharField(max_length=255, null=True, blank=True, verbose_name="ID Сессии", help_text="укажите ID Сессии")
-    link = models.URLField(max_length=255, null=True, blank=True, verbose_name="Ссылка на оплату")
+    payment_method = models.CharField(
+        choices=PaymentMethod.choices,
+        max_length=20,
+    )
+    session_id = models.CharField(
+        max_length=255,
+        null=True,
+        blank=True,
+        verbose_name="ID Сессии",
+        help_text="укажите ID Сессии",
+    )
+    link = models.URLField(
+        max_length=1000,
+        null=True,
+        blank=True,
+        verbose_name="Ссылка на оплату",
+    )
 
 
     def clean(self):
