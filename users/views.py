@@ -13,6 +13,11 @@ from rest_framework.viewsets import ModelViewSet
 from users.models import CustomUser, Payments
 from users.permissions import IsModerator
 from users.serializers import CustomUsersSerializer, PaymentsSerializer
+from users.services import (
+    create_stripe_price,
+    create_stripe_product,
+    create_stripe_session,
+)
 
 
 class PaymentsViewSet(ModelViewSet):
@@ -24,6 +29,21 @@ class PaymentsViewSet(ModelViewSet):
     filter_backends = [DjangoFilterBackend, OrderingFilter]
     filterset_fields = ["course", "lesson", "payment_method"]
     ordering_fields = ["payment_date"]
+
+
+class PaymentsCreateAPIView(CreateAPIView):
+    serializer_class = PaymentsSerializer
+    queryset = Payments.objects.all()
+
+    def perform_create(self, serializer):
+        course = serializer.validated_data["course"]
+        payment = serializer.save(user=self.request.user, payment_amount=course.price)
+        product = create_stripe_product(payment.course.name)
+        price = create_stripe_price(payment.payment_amount, product)
+        session_id, payment_link = create_stripe_session(price)
+        payment.session_id = session_id
+        payment.link = payment_link
+        payment.save()
 
 
 class CustomUserCreateAPIView(CreateAPIView):

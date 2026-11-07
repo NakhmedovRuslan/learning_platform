@@ -12,6 +12,7 @@ class Course(models.Model):
     owner = models.ForeignKey(
         CustomUser, on_delete=models.CASCADE, verbose_name="Создатель курса"
     )
+    price = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
         return self.name
@@ -31,7 +32,7 @@ class Lesson(models.Model):
     preview = models.ImageField(
         upload_to="lesson_previews/", verbose_name="Превью", blank=True, null=True
     )
-    video_link = models.URLField(verbose_name="Ссылка на видео", blank=True, null=True)
+    video_link = models.URLField(verbose_name="Ссылка на видео")
 
     def __str__(self):
         return f"{self.course.name} — {self.name}"
