@@ -38,6 +38,6 @@ urlpatterns = [
         TokenRefreshView.as_view(permission_classes=(AllowAny,)),
         name="token_refresh",
     ),
-    path("payments/", PaymentsCreateAPIView.as_view(), name="payments"),
+    path("payments/create", PaymentsCreateAPIView.as_view(), name="payments_create"),
 
 ]
