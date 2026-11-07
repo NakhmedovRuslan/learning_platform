@@ -13,7 +13,11 @@ from rest_framework.viewsets import ModelViewSet
 from users.models import CustomUser, Payments
 from users.permissions import IsModerator
 from users.serializers import CustomUsersSerializer, PaymentsSerializer
-from users.services import create_stripe_price, create_stripe_session, create_stripe_product
+from users.services import (
+    create_stripe_price,
+    create_stripe_product,
+    create_stripe_session,
+)
 
 
 class PaymentsViewSet(ModelViewSet):
@@ -40,7 +44,6 @@ class PaymentsCreateAPIView(CreateAPIView):
         payment.session_id = session_id
         payment.link = payment_link
         payment.save()
-
 
 
 class CustomUserCreateAPIView(CreateAPIView):

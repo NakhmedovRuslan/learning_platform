@@ -46,9 +46,7 @@ class Payments(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     payment_date = models.DateField(auto_now_add=True)
 
-    course = models.ForeignKey(
-        "materials.Course",
-        on_delete=models.CASCADE)
+    course = models.ForeignKey("materials.Course", on_delete=models.CASCADE)
 
     lesson = models.ForeignKey(
         "materials.Lesson",
@@ -75,7 +73,6 @@ class Payments(models.Model):
         blank=True,
         verbose_name="Ссылка на оплату",
     )
-
 
     def clean(self):
         super().clean()
