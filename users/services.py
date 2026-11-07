@@ -10,20 +10,19 @@ def create_stripe_product(name):
     product = client.v1.products.create({"name": name})
     return product
 
-def create_stripe_price(amount):
+def create_stripe_price(amount, product):
     """Создание цены в страйп"""
     price = client.v1.prices.create({
+        "product": product.get("id"),
         "currency": "rub",
         "unit_amount": amount * 100,
-        "recurring": {"interval": "month"},
-        "product_data": {"name": "Python-разработчик"},
     })
     return price
 
 def create_stripe_session(price):
     session = client.v1.checkout.sessions.create({
-        "success_url": "https://127.0.0.1:8000/",
+        "success_url": "http://127.0.0.1:8000/",
         "line_items": [{"price": price.get("id"), "quantity": 1}],
-        "mode": "subscription",
+        "mode": "payment",
     })
     return session.get("id"), session.get("url")

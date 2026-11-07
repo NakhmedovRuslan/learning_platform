@@ -1,3 +1,5 @@
+import uuid
+
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -51,6 +53,9 @@ class Payments(models.Model):
     )
     payment_amount = models.DecimalField(max_digits=10, decimal_places=2)
     payment_method = models.CharField(choices=PaymentMethod.choices, max_length=20)
+    session_id = models.CharField(max_length=255, null=True, blank=True, verbose_name="ID Сессии", help_text="укажите ID Сессии")
+    link = models.URLField(max_length=255, null=True, blank=True, verbose_name="Ссылка на оплату")
+
 
     def clean(self):
         super().clean()
