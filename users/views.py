@@ -26,6 +26,17 @@ class PaymentsViewSet(ModelViewSet):
     ordering_fields = ["payment_date"]
 
 
+class PaymentsCreateAPIView(CreateAPIView):
+    serializer_class = PaymentsSerializer
+    queryset = Payments.objects.all()
+
+    def perform_create(self, serializer):
+        payment = serializer.save(user=self.request.user)
+
+        payment.save()
+
+
+
 class CustomUserCreateAPIView(CreateAPIView):
     """контроллер регистрации пользователя"""
 
